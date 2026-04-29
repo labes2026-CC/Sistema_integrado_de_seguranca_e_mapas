@@ -1,15 +1,13 @@
 "use client";
-
-import React from 'react';
 import { Share2, Download, ChevronDown } from 'lucide-react';
 
-const CrimeMapDashboard = () => {
+const BaseMap = () => {
   return (
     <div className="flex flex-col w-full h-screen bg-[#F3F4F6] p-4 font-sans text-gray-700">
-      {/* Título Principal */}
+      
       <h1 className="text-4xl font-bold mb-6">Mapa</h1>
 
-      {/* Barra de Filtros */}
+     
       <div className="flex flex-wrap items-center gap-4 mb-4 bg-transparent">
         <FilterSelect label="Tipo" value="Todas" />
         <FilterSelect label="Ano" value="2024" />
@@ -26,17 +24,17 @@ const CrimeMapDashboard = () => {
         </div>
       </div>
 
-      {/* Área do Mapa */}
+     
       <div className="relative flex-grow w-full border-2 border-[#0091FF] rounded-sm overflow-hidden bg-[#e5e7eb]">
-        {/* Placeholder para o Mapa (Substituir por Google Maps/Leaflet) */}
+        
         <div 
           className="w-full h-full bg-cover bg-center opacity-80"
           style={{ backgroundImage: "url('/caminho-para-sua-imagem-do-mapa.jpg')" }}
         >
-          {/* Camada de Heatmap Simulada (opcional se for apenas visual) */}
+          
         </div>
 
-        {/* Legenda Flutuante */}
+        
         <div className="absolute bottom-6 right-6 w-64 bg-white/90 backdrop-blur-sm p-4 shadow-lg border border-gray-200 rounded-sm">
           <h3 className="font-bold text-gray-600 mb-4 leading-tight">
             Mapa de seguimentos Periculosos
@@ -58,16 +56,16 @@ const CrimeMapDashboard = () => {
         </div>
       </div>
 
-      {/* Timeline Inferior */}
+      
       <div className="mt-6 w-full px-2">
         <div className="flex justify-between text-lg font-bold mb-2">
           <span>2025</span>
           <span>2026</span>
         </div>
         <div className="relative w-full h-2 bg-gray-200 rounded-full">
-          {/* Barra de Progresso Azul */}
+          
           <div className="absolute top-0 left-0 w-1/2 h-full bg-[#3B82F6] rounded-l-full" />
-          {/* Indicador de Seleção */}
+          
           <div className="absolute top-[-8px] left-1/2 w-1 h-[24px] bg-[#3B82F6]" />
         </div>
       </div>
@@ -75,7 +73,6 @@ const CrimeMapDashboard = () => {
   );
 };
 
-/* Sub-componente de Filtro */
 const FilterSelect = ({ label, value }: { label: string; value: string }) => (
   <div className="flex items-center gap-2">
     <span className="text-sm text-gray-500">{label}:</span>
@@ -86,4 +83,4 @@ const FilterSelect = ({ label, value }: { label: string; value: string }) => (
   </div>
 );
 
-export default CrimeMapDashboard;
+export default BaseMap;
