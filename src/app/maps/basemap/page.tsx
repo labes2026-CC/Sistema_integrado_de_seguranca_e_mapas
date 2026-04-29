@@ -192,7 +192,7 @@ const FilterSelect = ({ label, options, selectedValue, onSelect }: FilterProps) 
                 className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors"
               >
                 <span className={selectedValue === option ? "font-bold text-blue-600" : ""}>
-                  {option === "__all__" ? "Todas" : option}
+                  {option === "__all__" ? "Todos" : option}
                 </span>
                 {selectedValue === option && <Check size={14} className="text-blue-600" />}
               </div>
