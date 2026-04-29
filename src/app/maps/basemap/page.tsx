@@ -3,6 +3,7 @@
 import dynamic from 'next/dynamic';
 import { Share2, Download, ChevronDown, Check } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
+import DefaultMap from '../../components/mapContainer';
 
 // Importação dinâmica do mapa para evitar erros de SSR
 const MapComponent = dynamic(() => import('../../components/mapContainer'), { 
@@ -14,6 +15,11 @@ const MapComponent = dynamic(() => import('../../components/mapContainer'), {
   )
 });
 
+// const MapComponent = dynamic(() => import('../../components/mapContainer'), { 
+//   ssr: false,
+//   loading: () => <div className="w-full h-full bg-gray-100 animate-pulse" />
+// })
+
 interface FilterProps {
   label: string;
   options: string[];
@@ -21,7 +27,61 @@ interface FilterProps {
   onSelect: (value: string) => void;
 }
 
+interface Ocorrencia {
+  id: number;
+  lat: number;
+  lng: number;
+  tipo: string; // ex: 'homicidio'
+  data: string; // ex: '15/05/2024'
+  horario: string; // ex: '22:30'
+  bairro: string;
+  bucket_horario: string; // ex: 'red' (calculado no pré-processamento do CSV)
+}
+
 const BaseMap = () => {
+
+  const [ocorrencias, setOcorrencias] = useState<Ocorrencia[]>([
+    {
+      id: 1,
+      lat: -1.460,
+      lng: -48.490,
+      tipo: 'homicidio',
+      data: '15/05/2024',
+      horario: '22:30',
+      bairro: 'Centro',
+      bucket_horario: 'red'
+    },
+    {
+      id: 2,
+      lat: -1.455,
+      lng: -48.485,
+      tipo: 'roubo',
+      data: '10/06/2024',
+      horario: '18:45',
+      bairro: 'Norte',
+      bucket_horario: 'orange'
+    },
+    {
+      id: 3,
+      lat: -1.470,
+      lng: -48.480,
+      tipo: 'furto',
+      data: '20/07/2024',
+      horario: '14:20',
+      bairro: 'Sul',
+      bucket_horario: 'yellow'
+    },
+    {
+      id: 4,
+      lat: -1.465,
+      lng: -48.475,
+      tipo: 'trafico de drogas',
+      data: '05/08/2024',
+      horario: '23:10',
+      bairro: 'Leste',
+      bucket_horario: 'green'
+    }
+  ]);
 
   const [tipoSelecionado, setTipoSelecionado] = useState("__all__");
   const [anoSelecionado, setAnoSelecionado] = useState("__all__");
@@ -108,8 +168,8 @@ const BaseMap = () => {
 
       <div className="relative flex-grow w-full border-2 border-[#0091FF] rounded-sm overflow-hidden shadow-inner">
         
-        
-        <MapComponent />
+        {/*importacao dinamica*/}
+        <MapComponent ocorrencias={ocorrencias}/>
 
         {/* <div className="absolute bottom-6 right-6 w-56 bg-white/95 backdrop-blur-sm p-4 shadow-xl border border-gray-200 rounded-sm z-[1000]">
           <h3 className="font-bold text-gray-600 mb-4 text-xs leading-tight uppercase tracking-wider">
