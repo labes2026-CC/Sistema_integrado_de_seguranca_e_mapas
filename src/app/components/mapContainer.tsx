@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 // Exemplo de coordenadas para Belém/PA
 const center: [number, number] = [-1.4558, -48.4902];
 
-const MyMap = ({ data }: any) => {
+const defaultMap = ({ data }: any) => {
   return (
     <div className="h-full w-full relative">
       <MapContainer 
@@ -21,7 +21,7 @@ const MyMap = ({ data }: any) => {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {/* Exemplo de como renderizar um polígono de bairro vindo do seu KML/GeoJSON */}
+        {/* Exemplo de como renderizar um polígono de bairro vindo do KML/GeoJSON */}
         <Polygon 
           pathOptions={{ 
             fillColor: '#C81D11', 
@@ -46,4 +46,4 @@ const MyMap = ({ data }: any) => {
   );
 };
 
-export default MyMap;
+export default defaultMap;
