@@ -1,7 +1,8 @@
 "use client";
 
 import dynamic from 'next/dynamic';
-import { Share2, Download, ChevronDown } from 'lucide-react';
+import { Share2, Download, ChevronDown, Check } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 // Importação dinâmica do mapa para evitar erros de SSR
 const MapComponent = dynamic(() => import('../../components/mapContainer'), { 
@@ -13,7 +14,56 @@ const MapComponent = dynamic(() => import('../../components/mapContainer'), {
   )
 });
 
+interface FilterProps {
+  label: string;
+  options: string[];
+  selectedValue: string;
+  onSelect: (value: string) => void;
+}
+
 const BaseMap = () => {
+
+  const [tipoSelecionado, setTipoSelecionado] = useState("__all__");
+  const [anoSelecionado, setAnoSelecionado] = useState("__all__");
+  const [distritoSelecionado, setDistritoSelecionado] = useState("__all__");
+  const [bairroSelecionado, setBairroSelecionado] = useState("__all__");
+
+  const tiposCrime = [
+    "__all__", 
+    "Homicídio", 
+    "Roubo", 
+    "Furto", 
+    "Tráfico de Drogas",
+    "Feminicídio"
+  ];
+
+  const AnosCrime = [
+    "__all__", 
+    "2025", 
+    "2024", 
+    "2023", 
+    "2022",
+    "2021"
+  ];
+
+  const DistritosCrime = [
+    "__all__", 
+    "Centro", 
+    "Norte", 
+    "Sul", 
+    "Leste",
+    "Oeste"
+  ];
+
+  const BairrosCrime = [
+    "__all__", 
+    "bairro1", 
+    "bairro2", 
+    "bairro3", 
+    "bairro4",
+    "bairro5"
+  ];
+
   return (
     <div className="flex flex-col w-full h-screen bg-[#F3F4F6] p-4 font-sans text-gray-700">
       
@@ -21,10 +71,30 @@ const BaseMap = () => {
 
       
       <div className="flex flex-wrap items-center gap-4 mb-4 bg-transparent">
-        <FilterSelect label="Tipo" value="Todas" />
-        <FilterSelect label="Ano" value="2024" />
-        <FilterSelect label="Distrito" value="Todos" />
-        <FilterSelect label="Bairro" value="Todos" />
+        <FilterSelect 
+        label="Tipo" 
+        options={tiposCrime} 
+        selectedValue={tipoSelecionado}
+        onSelect={(val) => setTipoSelecionado(val)} 
+      />
+      <FilterSelect 
+        label="Ano" 
+        options={AnosCrime} 
+        selectedValue={anoSelecionado}
+        onSelect={(val) => setAnoSelecionado(val)} 
+      />
+      <FilterSelect 
+        label="Distrito" 
+        options={DistritosCrime} 
+        selectedValue={distritoSelecionado}
+        onSelect={(val) => setDistritoSelecionado(val)} 
+      />
+      <FilterSelect 
+        label="bairro" 
+        options={BairrosCrime} 
+        selectedValue={bairroSelecionado}
+        onSelect={(val) => setBairroSelecionado(val)} 
+      />
         
         <div className="flex gap-2 ml-auto">
           <button className="p-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors">
@@ -76,14 +146,62 @@ const BaseMap = () => {
   );
 };
 
-const FilterSelect = ({ label, value }: { label: string; value: string }) => (
-  <div className="flex items-center gap-2">
-    <span className="text-sm text-gray-500">{label}:</span>
-    <div className="flex items-center justify-between min-w-[120px] bg-white border border-gray-300 rounded-md px-3 py-1.5 cursor-pointer hover:border-gray-400 transition-all">
-      <span className="text-sm font-medium">{value}</span>
-      <ChevronDown size={16} className="text-gray-400" />
+const FilterSelect = ({ label, options, selectedValue, onSelect }: FilterProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Fecha o menu se clicar fora dele
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="flex items-center gap-2 relative" ref={dropdownRef}>
+      <span className="text-sm text-gray-500 whitespace-nowrap">{label}:</span>
+      
+      <div 
+        onClick={() => setIsOpen(!isOpen)}
+        className="flex items-center justify-between min-w-[140px] bg-white border border-gray-300 rounded-md px-3 py-1.5 cursor-pointer hover:border-gray-400 transition-all shadow-sm"
+      >
+        <span className="text-sm font-medium truncate uppercase">
+          {selectedValue === "__all__" ? "Todas" : selectedValue}
+        </span>
+        <ChevronDown 
+          size={16} 
+          className={`text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} 
+        />
+      </div>
+
+      {/* Menu de Opções */}
+      {isOpen && (
+        <div className="absolute top-full left-[calc(100%-140px)] mt-1 w-full min-w-[200px] bg-white border border-gray-200 rounded-md shadow-lg z-[2000] max-h-60 overflow-y-auto">
+          <div className="py-1">
+            {options.map((option) => (
+              <div
+                key={option}
+                onClick={() => {
+                  onSelect(option);
+                  setIsOpen(false);
+                }}
+                className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 cursor-pointer transition-colors"
+              >
+                <span className={selectedValue === option ? "font-bold text-blue-600" : ""}>
+                  {option === "__all__" ? "Todas" : option}
+                </span>
+                {selectedValue === option && <Check size={14} className="text-blue-600" />}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-);
+  );
+};
 
 export default BaseMap;
