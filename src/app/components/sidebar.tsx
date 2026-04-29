@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Menu, X, Home, Settings, Stars, Map } from 'lucide-react'; // Biblioteca de ícones
+import Link from 'next/link';
 
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -29,8 +30,10 @@ const Sidebar = () => {
 
       
       <nav className="flex flex-col items-center gap-[40px] w-full">
-        <NavItem icon={<Stars size={24} />} label="DashBoard" />
-        <NavItem icon={<Map size={24} />} label="Mapas" />
+        
+        <Link href="/"> <NavItem icon={<Stars size={24} />} label="DashBoard" /> </Link>
+        <Link href="/maps/baseMap"> <NavItem icon={<Map size={24} />} label="Mapas" />  </Link>
+        
       </nav>
     </aside>
   );
